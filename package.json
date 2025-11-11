@@ -1,0 +1,23 @@
+{
+  "name": "cmpm-120-project-3",
+  "version": "1.0.0",
+  "description": "Phaser.js Platformer Game - CMPM 120 Project 3",
+  "main": "src/main.js",
+  "type": "module",
+  "scripts": {
+    "dev": "npx http-server . -p 8000 -c-1",
+    "start": "npx http-server . -p 8000 -c-1"
+  },
+  "keywords": [
+    "phaser",
+    "game",
+    "platformer"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "phaser": "^3.80.1"
+  },
+  "devDependencies": {}
+}
+
