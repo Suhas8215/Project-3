@@ -1,15 +1,13 @@
-import Phaser from 'phaser';
 import TitleScene from './scenes/TitleScene.js';
 import LevelSelectScene from './scenes/LevelSelectScene.js';
 import GameOverScene from './scenes/GameOverScene.js';
-// Import level scenes as they are created
-// import Level1Scene from './scenes/Level1Scene.js';
-// import Level2Scene from './scenes/Level2Scene.js';
+import Level1Scene from './scenes/Level1Scene.js';
+import Level2Scene from './scenes/Level2Scene.js';
 
 const config = {
     type: Phaser.AUTO,
-    width: 800,
-    height: 600,
+    width: window.innerWidth || 800,
+    height: window.innerHeight || 600,
     parent: 'game-container',
     physics: {
         default: 'arcade',
@@ -22,14 +20,12 @@ const config = {
         TitleScene,
         LevelSelectScene,
         GameOverScene,
-        // Add level scenes here as they are created
-        // Level1Scene,
-        // Level2Scene
+        Level1Scene,
+        Level2Scene
     ],
     scale: {
-        mode: Phaser.Scale.FIT,
-        autoCenter: Phaser.Scale.CENTER_BOTH
-    }
+        mode: Phaser.Scale.NONE
+    },
 };
 
 const game = new Phaser.Game(config);

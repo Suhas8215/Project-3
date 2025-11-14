@@ -1,8 +1,6 @@
-import Phaser from 'phaser';
-
 /**
- * Utility class for managing particle systems
- * Creates and configures particle effects for various game actions
+ * utility class for managing particle systems
+ * creates and configures particle effects for various game actions
  */
 export default class ParticleManager {
     constructor(scene) {
@@ -56,7 +54,7 @@ export default class ParticleManager {
     }
 
     /**
-     * Create particle system for collecting items
+     * create particle system for collecting items
      */
     createCollectionParticles() {
         const particles = this.scene.add.particles(0, 0, 'particle', {
@@ -67,6 +65,22 @@ export default class ParticleManager {
             gravityY: -50
         });
         
+        return particles;
+    }
+
+    /**
+     * create particle system for lava splashes
+     */
+    createLavaSplashParticles() {
+        const particles = this.scene.add.particles(0, 0, 'particle', {
+            speed: { min: 80, max: 160 },
+            scale: { start: 0.6, end: 0 },
+            lifespan: 500,
+            tint: 0xff6600,
+            gravityY: -100,
+            angle: { min: 220, max: 320 }
+        });
+
         return particles;
     }
 }

@@ -1,8 +1,6 @@
-import Phaser from 'phaser';
-
 /**
- * Collectible item prefab
- * Can be collected by the player
+ * collectible item prefab
+ * can be collected by the player
  */
 export default class Collectible extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, texture = 'collectible', type = 'default') {

@@ -1,4 +1,3 @@
-import Phaser from 'phaser';
 import BaseLevelScene from './BaseLevelScene.js';
 import Player from '../prefabs/Player.js';
 import Collectible from '../prefabs/Collectible.js';
