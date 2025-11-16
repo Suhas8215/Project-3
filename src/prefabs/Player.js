@@ -75,11 +75,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             }
         }
 
-        // jumping / double jump (space is primary, arrows/w are secondary)
-        const justPressedJump =
-            Phaser.Input.Keyboard.JustDown(this.spaceKey) ||
-            Phaser.Input.Keyboard.JustDown(this.cursors.up) ||
-            Phaser.Input.Keyboard.JustDown(this.wasdKeys.W);
+        // jumping / double jump (SPACE only)
+        const justPressedJump = Phaser.Input.Keyboard.JustDown(this.spaceKey);
 
         const onGround = this.body.blocked.down || this.body.touching.down;
 

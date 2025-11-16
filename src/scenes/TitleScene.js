@@ -69,6 +69,17 @@ export default class TitleScene extends Phaser.Scene {
             }
         ).setOrigin(0.5);
 
+        this.add.text(
+            width / 2,
+            height / 2 + 90,
+            'lever - E near lever   •   climb ladders - up arrow or W',
+            {
+                fontSize: '18px',
+                fill: '#ffffff',
+                fontFamily: 'Arial'
+            }
+        ).setOrigin(0.5);
+
         // add keyboard input
         this.cursors = this.input.keyboard.createCursorKeys();
         this.spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);

@@ -100,6 +100,9 @@ export default class Level2Scene extends BaseLevelScene {
         this.slimeB.attachToPlatform(this.platformB, 40);
         this.enemies.push(this.slimeA, this.slimeB);
 
+        this.totalEnemies = this.enemies.length;
+        this.enemiesDefeated = 0;
+
         // fire shield power-up (red flag) that grants temporary lava/shot immunity
         this.fireShield = new FireShieldPowerup(this, 500, this.levelHeight - 220);
 
@@ -123,10 +126,10 @@ export default class Level2Scene extends BaseLevelScene {
         this.collectiblesCollected = 0;
         this.totalCollectibles = crystalPositions.length;
 
-        // exit portal (initially locked), sitting on the end platform
+        // exit portal (always active), sitting on the end platform
         this.exitPortal = this.physics.add.staticImage(endPlatform.x, endPlatform.y - 90, 'exitPortal');
         this.exitPortal.setScale(1.1);
-        this.exitPortalActive = false;
+        this.exitPortal.setDepth(4);
 
         // particle manager and player particles
         const pm = new ParticleManager(this);
@@ -169,6 +172,14 @@ export default class Level2Scene extends BaseLevelScene {
         });
         this.crystalText.setScrollFactor(0);
 
+        // enemies hud
+        this.enemiesText = this.add.text(16, 64, 'slimes: 0 / ' + this.totalEnemies, {
+            fontSize: '20px',
+            fill: '#ffffff',
+            fontFamily: 'Arial'
+        });
+        this.enemiesText.setScrollFactor(0);
+
         // hearts hud
         this.heartsText = this.add.text(16, 40, '', {
             fontSize: '20px',
@@ -177,6 +188,37 @@ export default class Level2Scene extends BaseLevelScene {
         });
         this.heartsText.setScrollFactor(0);
         this.updateHeartsText();
+
+        // tutorial hint text (fades after a few seconds)
+        const hintText = this.add.text(
+            this.cameras.main.width / 2,
+            100,
+            'beware the lava! collect crystals, grab the fire shield, and avoid enemy shots.\nslimes can be defeated by running into them or jumping on them.',
+            {
+                fontSize: '18px',
+                fill: '#ffd38a',
+                fontFamily: 'Arial',
+                align: 'center'
+            }
+        );
+        hintText.setOrigin(0.5);
+        hintText.setScrollFactor(0);
+        hintText.setAlpha(0);
+
+        this.tweens.add({
+            targets: hintText,
+            alpha: 1,
+            duration: 500,
+            delay: 1000
+        });
+
+        this.tweens.add({
+            targets: hintText,
+            alpha: 0,
+            delay: 6500,
+            duration: 1000,
+            onComplete: () => hintText.destroy()
+        });
 
         // fade in when (re)spawning
         this.cameras.main.fadeIn(400, 0, 0, 0);
@@ -232,26 +274,9 @@ export default class Level2Scene extends BaseLevelScene {
         collectParticles.explode(16);
 
         this.crystalText.setText('crystals: ' + this.collectiblesCollected + ' / ' + this.totalCollectibles);
-
-        if (this.collectiblesCollected >= this.totalCollectibles) {
-            this.unlockExit();
-        }
-    }
-
-    unlockExit() {
-        this.exitPortalActive = true;
-        this.tweens.add({
-            targets: this.exitPortal,
-            scale: 1.3,
-            yoyo: true,
-            repeat: -1,
-            duration: 600
-        });
     }
 
     tryCompleteLevel() {
-        if (!this.exitPortalActive) return;
-
         this.sound.play('victorySound', { volume: 0.9 });
         if (this.ambient) {
             this.ambient.stop();
@@ -300,7 +325,12 @@ export default class Level2Scene extends BaseLevelScene {
         if (!slime || !slime.active) return;
 
         const shot = this.slimeShots.create(slime.x, slime.y, 'slimeShot');
-        shot.setVelocityX(-250);
+        // fire towards the player if possible, otherwise default left
+        let dir = -1;
+        if (this.player) {
+            dir = this.player.x >= slime.x ? 1 : -1;
+        }
+        shot.setVelocityX(250 * dir);
         shot.setDepth(4);
     }
 
@@ -410,6 +440,11 @@ export default class Level2Scene extends BaseLevelScene {
 
             slime.setActive(false);
             slime.setVisible(false);
+
+            this.enemiesDefeated++;
+            if (this.enemiesText) {
+                this.enemiesText.setText('slimes: ' + this.enemiesDefeated + ' / ' + this.totalEnemies);
+            }
 
             const pm = new ParticleManager(this);
             const deathParticles = pm.createCollectionParticles();
